@@ -49,7 +49,7 @@ $bml->login("username", "password")
 
 ### Get transactions made between a date range.
 
-Dates passed to the argument of the function goes through php strtotime() function. Which can parse about any English textual datetime description into a Unix timestamp. You can pass the arguments in any type of format you want.
+Dates passed to the argument of the function goes through php strtotime() function. Which can parse about any English textual datetime description into a Unix timestamp. You can pass the arguments in any type of format you want. Transactions are paginated by the BML API. If you wish to get the next page of what you requested you may pass a third argument to the function which will correspond to page number.
 
 ```php
 use Baraveli\BMLTransaction\BML;
