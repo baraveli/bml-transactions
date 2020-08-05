@@ -1,6 +1,4 @@
-![logo](logo-new.png)
-
-# BML Transaction
+# BML Transaction :memo:
 
 [![StyleCI](https://github.styleci.io/repos/285134455/shield?branch=master)](https://github.styleci.io/repos/285134455?branch=master)
 
