@@ -1,0 +1,19 @@
+{
+    "name": "baraveli/bml-transaction",
+    "description": "PHP Package for getting transactions from BML.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mohamed jinas",
+            "email": "j@live.mv"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Baraveli\\BMLTransaction\\": "src/"
+        }
+    }
+}
