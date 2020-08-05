@@ -52,7 +52,6 @@ class Client extends GuzzleClient
     public function GetRequest(string $route): array
     {
         $response = $this->request('GET',$this->BML_API . $route);
-        $rawresponse = json_decode($response->getBody(), true);
-        return $rawresponse["payload"];
+        return json_decode($response->getBody(), true)["payload"];
     }
 }
