@@ -1,8 +1,6 @@
-# BML Transaction
-
-<p align="center">
 ![logo](logo.png)
-</p>
+
+# BML Transaction
 
 [![StyleCI](https://github.styleci.io/repos/285134455/shield?branch=master)](https://github.styleci.io/repos/285134455?branch=master)
 
