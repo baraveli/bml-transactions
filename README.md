@@ -65,3 +65,15 @@ $bml->login("username", "password")
 ```
 
 This will return all the transactions made in December 15 2019 to August 1 2020. You can only get the transactions made with in 12 months.
+
+### Running the tests
+
+Create .env.testing in root directory of the cloned repo. Fill the credentials 
+```
+BML_USERNAME=
+BML_PASSWORD=
+```
+**To run the tests run**
+```
+vendor/bin/phpunit
+```
