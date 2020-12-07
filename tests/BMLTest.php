@@ -40,11 +40,11 @@ class BMLTest extends \PHPUnit\Framework\TestCase
     /** @test */
     public function it_can_get_the_transactions_made_between_certain_dates()
     {
-        $start = "December 15 2019";
-        $end = "August 1 2020";
+        $start = 'December 15 2019';
+        $end = 'August 1 2020';
         $response = $this->bml->GetTransactionsBetween($start, $end);
 
-        $date = strtotime($response["history"][0]["bookingDate"]);
+        $date = strtotime($response['history'][0]['bookingDate']);
 
         $this->assertTrue($date >= strtotime($start) && $date <= strtotime($end));
     }
