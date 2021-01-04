@@ -19,14 +19,17 @@ class BML
      *
      * @param string $username
      * @param string $password
+     * @param int	$account
+     *
+     * Note: $account is account index from dashboard
      *
      * @return BML
      */
-    public function login(string $username, string $password): BML
+    public function login(string $username, string $password, int $account = 0): BML
     {
         $response = $this->client->PostRequest(['j_username' => $username, 'j_password' => $password], 'm/login');
         $this->authenticationStatus = $response['authenticated'];
-        $this->SetUserID();
+        $this->SetUserID($account);
 
         return $this;
     }
@@ -73,13 +76,26 @@ class BML
     }
 
     /**
+     * Get Accounts
+     *
+     * @return array
+     */
+     public function GetAccounts(): array
+     {
+        $response = $this->client->GetRequest('dashboard');
+        return $response['dashboard'];
+     }
+
+    /**
      * SetUserID.
+     *
+     * @param integer $account
      *
      * @return void
      */
-    protected function SetUserID(): void
+    protected function SetUserID($account): void
     {
-        $response = $this->client->GetRequest('dashboard');
-        $this->userID = $response['dashboard'][0]['id'];
+        $response = $this->GetAccounts();
+        $this->userID = $response[$account]['id'];
     }
 }
