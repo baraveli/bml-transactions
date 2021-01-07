@@ -109,29 +109,23 @@ class BML
         $this->userID = $this->accounts[$account]['id'];
     }
 
+    /**
+     * Get profiles.
+     *
+     * @return array
+     */
+    public function getProfile(): array
+    {
+        return $this->client->get('profile');
+    }
 
-	/**
-	 * Get profiles
-	 *
-	 * @return array
-	 *
-	 */
-	public function getProfile(): array
-	{
-		return $this->client->get('profile');
-	}
-
-
-	/**
-	 * Select Profile
-	 * 
-	 * @param int $id
-	 *
-	 */
-	public function setProfile($id)
-	{
-		return $this->client->post('profile', ['profile' => $id]);
-	}
-
+    /**
+     * Select Profile.
+     *
+     * @param int $id
+     */
+    public function setProfile($id)
+    {
+        return $this->client->post('profile', ['profile' => $id]);
+    }
 }
-
