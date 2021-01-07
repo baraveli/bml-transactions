@@ -118,7 +118,7 @@ class BML
 	 */
 	public function getProfile(): array
 	{
-		return $this->client->get->('profile');
+		return $this->client->get('profile');
 	}
 
 
