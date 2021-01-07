@@ -4,10 +4,12 @@ namespace Baraveli\BMLTransaction;
 
 class BML
 {
-    protected $client;
+    public $client;
 
     public $userID;
     public $authenticationStatus;
+
+    private $accounts; // accounts from the selected profile
 
     public function __construct()
     {
@@ -21,7 +23,7 @@ class BML
      * @param string $password
      * @param int	$account
      *
-     * Note: $account is account index from dashboard
+     * Note: $account, override default account index
      *
      * @return BML
      */
@@ -29,6 +31,8 @@ class BML
     {
         $response = $this->client->PostRequest(['j_username' => $username, 'j_password' => $password], 'm/login');
         $this->authenticationStatus = $response['authenticated'];
+
+	$this->accounts = $this->GetAccounts();
         $this->SetUserID($account);
 
         return $this;
@@ -39,9 +43,10 @@ class BML
      *
      * @return array
      */
-    public function GetTodayTransactions(): array
+    public function GetTodayTransactions(int $account = null): array
     {
-        return $this->client->GetRequest('account/'.$this->userID.'/history/today');
+	$account = $account ?? $this->userID;
+        return $this->client->GetRequest("account/$account/history/today");
     }
 
     /**
@@ -49,9 +54,10 @@ class BML
      *
      * @return array
      */
-    public function GetPendingTransactions(): array
+    public function GetPendingTransactions(int $account = null): array
     {
-        return $this->client->GetRequest("history/pending/$this->userID");
+	$account = $account ?? $this->userID;
+        return $this->client->GetRequest("history/pending/$account");
     }
 
     /**
@@ -67,12 +73,14 @@ class BML
      *
      * @return array
      */
-    public function GetTransactionsBetween(string $from, string $to, string $page = '1'): array
+    public function GetTransactionsBetween(string $from, string $to, string $page = '1', int $account = null): array
     {
-        $from = date('Ymd', strtotime($from));
+	$account = $account ?? $this->userID;
+        
+	$from = date('Ymd', strtotime($from));
         $to = date('Ymd', strtotime($to));
 
-        return $this->client->GetRequest("account/$this->userID/history/$from/$to/$page");
+        return $this->client->GetRequest("account/$account/history/$from/$to/$page");
     }
 
     /**
@@ -95,7 +103,8 @@ class BML
      */
     protected function SetUserID($account): void
     {
-        $response = $this->GetAccounts();
-        $this->userID = $response[$account]['id'];
+        $this->userID = $this->accounts[$account]['id'];
     }
+
+
 }
