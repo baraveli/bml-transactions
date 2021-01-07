@@ -21,7 +21,7 @@ class BML
      *
      * @param string $username
      * @param string $password
-     * @param int	$account
+     * @param int    $account
      *
      * Note: $account, override default account index
      *
@@ -32,7 +32,7 @@ class BML
         $response = $this->client->PostRequest(['j_username' => $username, 'j_password' => $password], 'm/login');
         $this->authenticationStatus = $response['authenticated'];
 
-	$this->accounts = $this->GetAccounts();
+        $this->accounts = $this->GetAccounts();
         $this->SetUserID($account);
 
         return $this;
@@ -45,7 +45,8 @@ class BML
      */
     public function GetTodayTransactions(int $account = null): array
     {
-	$account = $account ?? $this->userID;
+        $account = $account ?? $this->userID;
+
         return $this->client->GetRequest("account/$account/history/today");
     }
 
@@ -56,7 +57,8 @@ class BML
      */
     public function GetPendingTransactions(int $account = null): array
     {
-	$account = $account ?? $this->userID;
+        $account = $account ?? $this->userID;
+
         return $this->client->GetRequest("history/pending/$account");
     }
 
@@ -75,29 +77,30 @@ class BML
      */
     public function GetTransactionsBetween(string $from, string $to, string $page = '1', int $account = null): array
     {
-	$account = $account ?? $this->userID;
-        
-	$from = date('Ymd', strtotime($from));
+        $account = $account ?? $this->userID;
+
+        $from = date('Ymd', strtotime($from));
         $to = date('Ymd', strtotime($to));
 
         return $this->client->GetRequest("account/$account/history/$from/$to/$page");
     }
 
     /**
-     * Get Accounts
+     * Get Accounts.
      *
      * @return array
      */
-     public function GetAccounts(): array
-     {
+    public function GetAccounts(): array
+    {
         $response = $this->client->GetRequest('dashboard');
+
         return $response['dashboard'];
-     }
+    }
 
     /**
      * SetUserID.
      *
-     * @param integer $account
+     * @param int $account
      *
      * @return void
      */
@@ -105,6 +108,4 @@ class BML
     {
         $this->userID = $this->accounts[$account]['id'];
     }
-
-
 }
