@@ -29,7 +29,7 @@ class BML
      */
     public function login(string $username, string $password, int $account = 0): BML
     {
-        $response = $this->client->PostRequest(['j_username' => $username, 'j_password' => $password], 'm/login');
+        $response = $this->client->post(['j_username' => $username, 'j_password' => $password], 'm/login');
         $this->authenticationStatus = $response['authenticated'];
 
         $this->accounts = $this->GetAccounts();
@@ -47,7 +47,7 @@ class BML
     {
         $account = $account ?? $this->userID;
 
-        return $this->client->GetRequest("account/$account/history/today");
+        return $this->client->get("account/$account/history/today");
     }
 
     /**
@@ -59,7 +59,7 @@ class BML
     {
         $account = $account ?? $this->userID;
 
-        return $this->client->GetRequest("history/pending/$account");
+        return $this->client->get("history/pending/$account");
     }
 
     /**
@@ -82,7 +82,7 @@ class BML
         $from = date('Ymd', strtotime($from));
         $to = date('Ymd', strtotime($to));
 
-        return $this->client->GetRequest("account/$account/history/$from/$to/$page");
+        return $this->client->get("account/$account/history/$from/$to/$page");
     }
 
     /**
@@ -92,7 +92,7 @@ class BML
      */
     public function GetAccounts(): array
     {
-        $response = $this->client->GetRequest('dashboard');
+        $response = $this->client->get('dashboard');
 
         return $response['dashboard'];
     }
@@ -108,4 +108,30 @@ class BML
     {
         $this->userID = $this->accounts[$account]['id'];
     }
+
+
+	/**
+	 * Get profiles
+	 *
+	 * @return array
+	 *
+	 */
+	public function getProfile(): array
+	{
+		return $this->client->get->('profile');
+	}
+
+
+	/**
+	 * Select Profile
+	 * 
+	 * @param int $id
+	 *
+	 */
+	public function setProfile($id)
+	{
+		return $this->client->post('profile', ['profile' => $id]);
+	}
+
 }
+

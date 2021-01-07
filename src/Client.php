@@ -27,7 +27,7 @@ class Client extends GuzzleClient
      *
      * @return array
      */
-    public function PostRequest(array $params, string $route): array
+    public function post(array $params, string $route): array
     {
         try {
             $response = $this->request('POST', $this->BML_API.$route, [
@@ -49,7 +49,7 @@ class Client extends GuzzleClient
      *
      * @return array
      */
-    public function GetRequest(string $route): array
+    public function get(string $route): array
     {
         $response = $this->request('GET', $this->BML_API.$route);
 
