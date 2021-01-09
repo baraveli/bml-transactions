@@ -126,6 +126,6 @@ class BML
      */
     public function setProfile($id)
     {
-        return $this->client->postRequest('profile', ['profile' => $id]);
+        return $this->client->postRequest(['profile' => $id], 'profile');
     }
 }

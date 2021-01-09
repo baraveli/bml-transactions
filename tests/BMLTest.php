@@ -79,6 +79,6 @@ class BMLTest extends \PHPUnit\Framework\TestCase
 	$bml = new BML(); 
 	$profiles = $bml->login($_ENV['BML_USERNAME'], $_ENV['BML_PASSWORD'])->getProfile();
 	$response = $bml->setProfile($profiles['profile'][0]['profile']);
-	$this->assertEquals($profiles['profile'][0]['profile'], $response['userInfo']['profile']['guid']);
+	$this->assertEquals($profiles['profile'][0]['profile'], $response['payload']['userinfo']['profile']['guid']);
     }
 }
