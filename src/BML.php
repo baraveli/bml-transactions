@@ -4,10 +4,12 @@ namespace Baraveli\BMLTransaction;
 
 class BML
 {
-    protected $client;
+    public $client;
 
     public $userID;
     public $authenticationStatus;
+
+    private $accounts; // accounts from the selected profile
 
     public function __construct()
     {
@@ -19,14 +21,19 @@ class BML
      *
      * @param string $username
      * @param string $password
+     * @param int    $account
+     *
+     * Note: $account, override default account index
      *
      * @return BML
      */
-    public function login(string $username, string $password): BML
+    public function login(string $username, string $password, int $account = 0): BML
     {
-        $response = $this->client->PostRequest(['j_username' => $username, 'j_password' => $password], 'm/login');
+        $response = $this->client->postRequest(['j_username' => $username, 'j_password' => $password], 'm/login');
         $this->authenticationStatus = $response['authenticated'];
-        $this->SetUserID();
+
+        $this->accounts = $this->GetAccounts();
+        $this->SetUserID($account);
 
         return $this;
     }
@@ -36,9 +43,11 @@ class BML
      *
      * @return array
      */
-    public function GetTodayTransactions(): array
+    public function GetTodayTransactions(int $account = null): array
     {
-        return $this->client->GetRequest('account/'.$this->userID.'/history/today');
+        $account = $account ?? $this->userID;
+
+        return $this->client->getRequest("account/$account/history/today");
     }
 
     /**
@@ -46,9 +55,11 @@ class BML
      *
      * @return array
      */
-    public function GetPendingTransactions(): array
+    public function GetPendingTransactions(int $account = null): array
     {
-        return $this->client->GetRequest("history/pending/$this->userID");
+        $account = $account ?? $this->userID;
+
+        return $this->client->getRequest("history/pending/$account");
     }
 
     /**
@@ -64,22 +75,57 @@ class BML
      *
      * @return array
      */
-    public function GetTransactionsBetween(string $from, string $to, string $page = '1'): array
+    public function GetTransactionsBetween(string $from, string $to, string $page = '1', int $account = null): array
     {
+        $account = $account ?? $this->userID;
+
         $from = date('Ymd', strtotime($from));
         $to = date('Ymd', strtotime($to));
 
-        return $this->client->GetRequest("account/$this->userID/history/$from/$to/$page");
+        return $this->client->getRequest("account/$account/history/$from/$to/$page");
+    }
+
+    /**
+     * Get Accounts.
+     *
+     * @return array
+     */
+    public function GetAccounts(): array
+    {
+        $response = $this->client->getRequest('dashboard');
+
+        return $response['dashboard'];
     }
 
     /**
      * SetUserID.
      *
+     * @param int $account
+     *
      * @return void
      */
-    protected function SetUserID(): void
+    protected function SetUserID($account): void
     {
-        $response = $this->client->GetRequest('dashboard');
-        $this->userID = $response['dashboard'][0]['id'];
+        $this->userID = $this->accounts[$account]['id'];
+    }
+
+    /**
+     * Get profiles.
+     *
+     * @return array
+     */
+    public function getProfile(): array
+    {
+        return $this->client->getRequest('profile');
+    }
+
+    /**
+     * Select Profile.
+     *
+     * @param int $id
+     */
+    public function setProfile($id)
+    {
+        return $this->client->postRequest(['profile' => $id], 'profile');
     }
 }

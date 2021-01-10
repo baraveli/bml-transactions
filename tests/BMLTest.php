@@ -48,4 +48,37 @@ class BMLTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($date >= strtotime($start) && $date <= strtotime($end));
     }
+
+    /** @test */
+    public function it_can_login_and_select_default_account()
+    {
+        $bml = new BML();
+        $response = $bml->login($_ENV['BML_USERNAME'], $_ENV['BML_PASSWORD'], 0); // 0 since most accounts have one account
+        $this->assertEquals(true, $response->authenticationStatus);
+    }
+
+    /** @test */
+    public function it_can_get_profile()
+    {
+        $bml = new BML();
+        $response = $bml->login($_ENV['BML_USERNAME'], $_ENV['BML_PASSWORD'])->getProfile();
+        $this->assertNotEmpty($response);
+    }
+
+    /** @test */
+    public function it_can_get_accounts()
+    {
+        $bml = new BML();
+        $response = $bml->login($_ENV['BML_USERNAME'], $_ENV['BML_PASSWORD'])->getAccounts();
+        $this->assertNotEmpty($response);
+    }
+
+    /** @test */
+    public function it_can_set_profile()
+    {
+        $bml = new BML();
+        $profiles = $bml->login($_ENV['BML_USERNAME'], $_ENV['BML_PASSWORD'])->getProfile();
+        $response = $bml->setProfile($profiles['profile'][0]['profile']);
+        $this->assertEquals($profiles['profile'][0]['profile'], $response['payload']['userinfo']['profile']['guid']);
+    }
 }
