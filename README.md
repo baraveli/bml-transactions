@@ -33,14 +33,8 @@ use Baraveli\BMLTransaction\BML;
 
 $bml = new BML;
 
-// Get todays transaction from first account
-$bml->login("username", "password", 0)
+$bml->login("username", "password")
     ->GetTodayTransactions();
-    
-// Get todays transaction from second account
-$bml->login("username", "password", 1)
-    ->GetTodayTransactions();    
-
 ```
 
 ### Get the Pending Transactions : array
@@ -92,8 +86,13 @@ use Baraveli\BMLTransaction\BML;
 
 $bml = new BML;
 
-$bml->login("username", "password")
+// Get todays transaction from first account
+$bml->login("username", "password", 0)
     ->GetTodayTransactions();
+    
+// Get todays transaction from second account
+$bml->login("username", "password", 1)
+    ->GetTodayTransactions();    
 ```
 
 
