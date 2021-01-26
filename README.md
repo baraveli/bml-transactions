@@ -66,6 +66,20 @@ $bml->login("username", "password")
 
 This will return all the transactions made in December 15 2019 to August 1 2020. You can only get the transactions made with in 12 months.
 
+
+### Multi Account Support
+
+Get all the accounts attached to the bml user.
+
+```
+use Baraveli\BMLTransaction\BML;
+
+$bml = new BML;
+
+$bml->login("username", "password")
+    ->GetAccounts();
+```
+
 ### Running the tests
 
 Create .env.testing in root directory of the cloned repo. Fill the credentials 
