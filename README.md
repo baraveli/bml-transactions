@@ -33,8 +33,13 @@ use Baraveli\BMLTransaction\BML;
 
 $bml = new BML;
 
-$bml->login("username", "password")
+// Get todays transaction from first account
+$bml->login("username", "password", 0)
     ->GetTodayTransactions();
+    
+// Get todays transaction from second account
+$bml->login("username", "password", 1)
+    ->GetTodayTransactions();    
 
 ```
 
@@ -69,9 +74,9 @@ This will return all the transactions made in December 15 2019 to August 1 2020.
 
 ### Multi Account Support
 
-Get all the accounts attached to the bml user.
+**Get all the accounts attached to the bml user.**
 
-```
+```php
 use Baraveli\BMLTransaction\BML;
 
 $bml = new BML;
@@ -79,6 +84,18 @@ $bml = new BML;
 $bml->login("username", "password")
     ->GetAccounts();
 ```
+
+**Get the transactions made today from a specified account**
+
+```php
+use Baraveli\BMLTransaction\BML;
+
+$bml = new BML;
+
+$bml->login("username", "password")
+    ->GetTodayTransactions();
+```
+
 
 ### Running the tests
 
