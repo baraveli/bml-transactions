@@ -2,11 +2,16 @@
 
 namespace Baraveli\BMLTransaction;
 
+use Baraveli\BMLTransaction\Exceptions\AuthenticationFailedException;
+use Baraveli\BMLTransaction\Exceptions\ServiceDownException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\SessionCookieJar;
 
 class Client extends GuzzleClient
 {
+    public const UNAUTHORIZED_CODE = 401;
+
     protected $BML_API = 'https://www.bankofmaldives.com.mv/internetbanking/api/';
 
     public function __construct()
@@ -30,13 +35,23 @@ class Client extends GuzzleClient
     public function postRequest(array $params, string $route): array
     {
         try {
-            $response = $this->request('POST', $this->BML_API.$route, [
+            $response = $this->request('POST', $this->BML_API . $route, [
                 'form_params' => $params,
             ]);
 
             return json_decode($response->getBody(), true);
-        } catch (\Exception $e) {
-            throw new \Exception('Error communicating with API');
+        } catch (RequestException $e) {
+
+            if ($e->hasResponse()) {
+                switch ($e->getCode()) {
+                    case $this::UNAUTHORIZED_CODE:
+                        throw new AuthenticationFailedException();
+                        break;
+                    default:
+                        throw new \Exception($e->getMessage());
+                        break;
+                }
+            }
         }
     }
 
@@ -51,8 +66,22 @@ class Client extends GuzzleClient
      */
     public function getRequest(string $route): array
     {
-        $response = $this->request('GET', $this->BML_API.$route);
+        try {
+            $response = $this->request('GET', $this->BML_API . $route);
 
-        return json_decode($response->getBody(), true)['payload'];
+            return json_decode($response->getBody(), true)['payload'];
+        } catch (RequestException $e) {
+
+            if ($e->hasResponse()) {
+                switch ($e->getCode()) {
+                    case $this::UNAUTHORIZED_CODE:
+                        throw new AuthenticationFailedException();
+                        break;
+                    default:
+                        throw new \Exception($e->getMessage());
+                        break;
+                }
+            }
+        }
     }
 }
